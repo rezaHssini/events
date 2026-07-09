@@ -1,0 +1,12 @@
+{
+  "appId": "com.event.app",
+  "appName": "Event",
+  "webDir": "../web/dist",
+  "android": {
+    "minWebViewVersion": 49,
+    "allowMixedContent": true
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

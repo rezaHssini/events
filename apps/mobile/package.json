@@ -1,0 +1,21 @@
+{
+  "name": "@event/mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Event Android app (Capacitor)",
+  "scripts": {
+    "sync": "npm run build:mobile -w @event/web && npx cap sync android",
+    "open": "npx cap open android",
+    "apk:debug": "npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleDebug",
+    "apk:release": "npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.1"
+  }
+}

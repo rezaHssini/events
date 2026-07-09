@@ -1,0 +1,28 @@
+{
+  "name": "event-platform",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Social events platform — web, mobile, and API",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @event/web",
+    "dev:api": "npm run start:dev -w @event/api",
+    "dev:all": "concurrently -n web,api -c cyan,magenta \"npm run dev -w @event/web\" \"npm run start:dev -w @event/api\"",
+    "build": "npm run build -w @event/web && npm run build -w @event/api",
+    "build:web": "npm run build -w @event/web",
+    "build:api": "npm run build -w @event/api",
+    "build:mobile": "npm run build:mobile -w @event/web",
+    "apk:debug": "npm run apk:debug -w @event/mobile",
+    "apk:release": "npm run apk:release -w @event/mobile",
+    "test:e2e": "npm run test:e2e -w @event/web",
+    "lint": "npm run lint -w @event/web"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
