@@ -21,4 +21,5 @@ fi
 
 cd "${EVENTS_DIR}"
 git pull --ff-only
+bash deploy/fix-nginx.sh
 bash deploy/server-setup.sh

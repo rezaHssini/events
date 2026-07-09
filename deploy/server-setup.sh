@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Deploy Event platform to a Linux server (isolated port, won't touch other apps).
+# Deploy Event platform to a Linux server on a dedicated port only.
+# Does NOT modify nginx or port 80.
 #
 # Usage (on server as root):
 #   bash deploy/server-setup.sh
@@ -7,19 +8,17 @@
 # Env overrides:
 #   EVENTS_PORT=3040
 #   EVENTS_DIR=/opt/events
-#   EVENTS_PUBLIC_PATH=/events   # nginx path on port 80 (empty to skip nginx)
 #   EVENTS_REPO=git@github.com:rezaHssini/events.git
 
 set -euo pipefail
 
 EVENTS_PORT="${EVENTS_PORT:-3040}"
 EVENTS_DIR="${EVENTS_DIR:-/opt/events}"
-EVENTS_PUBLIC_PATH="${EVENTS_PUBLIC_PATH:-/events}"
 EVENTS_REPO="${EVENTS_REPO:-git@github.com:rezaHssini/events.git}"
 NODE_MAJOR="${NODE_MAJOR:-20}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-echo "==> Event platform deploy (port ${EVENTS_PORT}, dir ${EVENTS_DIR})"
+echo "==> Event platform deploy (port ${EVENTS_PORT} only — will NOT touch nginx/port 80)"
 
 if ! command -v node >/dev/null 2>&1; then
   echo "==> Installing Node.js ${NODE_MAJOR}..."
@@ -41,8 +40,8 @@ fi
 echo "==> Installing dependencies..."
 npm ci
 
-echo "==> Building web + API (public path: ${EVENTS_PUBLIC_PATH})..."
-export VITE_BASE="${EVENTS_PUBLIC_PATH%/}/"
+echo "==> Building web + API..."
+unset VITE_BASE
 npm run build
 
 mkdir -p apps/api/data
@@ -73,42 +72,20 @@ EOF
 systemctl daemon-reload
 systemctl enable events-api
 systemctl restart events-api
+sleep 2
+
+if ! systemctl is-active --quiet events-api; then
+  echo "ERROR: events-api failed to start. Logs:"
+  journalctl -u events-api -n 40 --no-pager
+  exit 1
+fi
 
 echo "==> Opening port ${EVENTS_PORT}..."
 bash "${SCRIPT_DIR}/open-port.sh"
 
-if [ -n "${EVENTS_PUBLIC_PATH}" ] && command -v nginx >/dev/null 2>&1; then
-  echo "==> Configuring nginx reverse proxy on port 80 (${EVENTS_PUBLIC_PATH}/)..."
-  INCLUDE_FILE="/etc/nginx/conf.d/events-app.conf"
-  cat > "${INCLUDE_FILE}" << NGINX
-# Event app — auto-generated, proxies to localhost:${EVENTS_PORT}
-location ${EVENTS_PUBLIC_PATH%/}/ {
-    proxy_pass http://127.0.0.1:${EVENTS_PORT}/;
-    proxy_http_version 1.1;
-    proxy_set_header Host \$host;
-    proxy_set_header X-Real-IP \$remote_addr;
-    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto \$scheme;
-}
-
-location = ${EVENTS_PUBLIC_PATH%/} {
-    return 301 ${EVENTS_PUBLIC_PATH%/}/;
-}
-NGINX
-
-  DEFAULT_SITE="/etc/nginx/sites-available/default"
-  if [ -f "${DEFAULT_SITE}" ] && ! grep -q "events-app.conf" "${DEFAULT_SITE}"; then
-    sed -i '/listen .*80;/a\    include /etc/nginx/conf.d/events-app.conf;' "${DEFAULT_SITE}"
-  fi
-
-  nginx -t && systemctl reload nginx
-  echo "==> nginx: http://$(hostname -I | awk '{print $1}')${EVENTS_PUBLIC_PATH}/"
-fi
-
 IP="$(hostname -I | awk '{print $1}')"
 echo ""
-echo "==> Deployed successfully."
-echo "    Direct:  http://${IP}:${EVENTS_PORT}/"
-echo "    Via 80:  http://${IP}${EVENTS_PUBLIC_PATH}/"
-echo "    APK:     http://${IP}${EVENTS_PUBLIC_PATH}/downloads/event.apk"
+echo "==> Deployed successfully (port ${EVENTS_PORT} only)."
+echo "    Web: http://${IP}:${EVENTS_PORT}/"
+echo "    APK: http://${IP}:${EVENTS_PORT}/downloads/event.apk"
 systemctl status events-api --no-pager -l || true

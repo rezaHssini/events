@@ -1,11 +1,8 @@
 import { Smartphone } from 'lucide-react'
 
 const APP_STORE_URL = 'https://apps.apple.com/app/event'
-const baseUrl = import.meta.env.BASE_URL.endsWith('/')
-  ? import.meta.env.BASE_URL
-  : `${import.meta.env.BASE_URL}/`
 /** Direct APK install — styled as Google Play until Play Store listing is live. */
-const ANDROID_APK_URL = import.meta.env.VITE_ANDROID_APK_URL ?? `${baseUrl}downloads/event.apk`
+const ANDROID_APK_URL = import.meta.env.VITE_ANDROID_APK_URL ?? '/downloads/event.apk'
 
 function StoreBadge({
   store,

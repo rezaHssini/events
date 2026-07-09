@@ -31,10 +31,18 @@ echo "==> Restarting events-api..."
 systemctl daemon-reload 2>/dev/null || true
 systemctl enable events-api 2>/dev/null || true
 systemctl restart events-api 2>/dev/null || true
-systemctl status events-api --no-pager -l 2>/dev/null | head -12 || echo "(events-api service not installed yet — run deploy/server-setup.sh)"
+sleep 2
+systemctl status events-api --no-pager -l 2>/dev/null | head -15 || echo "(events-api service not installed yet — run deploy/server-setup.sh)"
 
 echo "==> Local listen check..."
-ss -tlnp | grep ":${EVENTS_PORT} " || echo "WARNING: nothing listening on ${EVENTS_PORT}"
+if ss -tlnp | grep ":${EVENTS_PORT} "; then
+  echo "    OK: listening on ${EVENTS_PORT}"
+  curl -fsI "http://127.0.0.1:${EVENTS_PORT}/" | head -3 || echo "    WARNING: curl to localhost failed"
+else
+  echo "    ERROR: nothing listening on ${EVENTS_PORT}"
+  echo "    Run: journalctl -u events-api -n 50 --no-pager"
+  exit 1
+fi
 
 echo ""
 echo "==> Done. Test from outside:"
