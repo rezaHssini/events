@@ -1,22 +1,26 @@
 import { Smartphone } from 'lucide-react'
 
 const APP_STORE_URL = 'https://apps.apple.com/app/event'
-const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.event.app'
+/** Direct APK install — styled as Google Play until Play Store listing is live. */
+const ANDROID_APK_URL = import.meta.env.VITE_ANDROID_APK_URL ?? '/downloads/event.apk'
 
 function StoreBadge({
   store,
   href,
+  download,
 }: {
   store: 'apple' | 'google'
   href: string
+  download?: string
 }) {
   const label = store === 'apple' ? 'Download on the App Store' : 'Get it on Google Play'
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
+      download={download}
+      target={download ? undefined : '_blank'}
+      rel={download ? undefined : 'noopener noreferrer'}
+      aria-label={download ? 'Download Android app (APK)' : label}
       className="inline-flex min-w-[140px] flex-1 items-center gap-2.5 rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 transition-colors hover:border-white/25 hover:bg-black/55 sm:flex-none"
     >
       <span className="text-xl leading-none">{store === 'apple' ? '' : '▶'}</span>
@@ -43,7 +47,7 @@ export function MobileAppPromo({
         <p className="text-sm text-[rgba(235,235,245,0.55)]">Also on mobile</p>
         <div className="flex flex-wrap gap-2">
           <StoreBadge store="apple" href={APP_STORE_URL} />
-          <StoreBadge store="google" href={PLAY_STORE_URL} />
+          <StoreBadge store="google" href={ANDROID_APK_URL} download="event.apk" />
         </div>
       </div>
     )
@@ -68,7 +72,7 @@ export function MobileAppPromo({
           </div>
           <div className="flex flex-wrap gap-2 sm:shrink-0">
             <StoreBadge store="apple" href={APP_STORE_URL} />
-            <StoreBadge store="google" href={PLAY_STORE_URL} />
+            <StoreBadge store="google" href={ANDROID_APK_URL} download="event.apk" />
           </div>
         </div>
       </div>
@@ -86,7 +90,7 @@ export function MobileAppPromo({
       </p>
       <div className="mt-3 flex flex-col gap-2">
         <StoreBadge store="apple" href={APP_STORE_URL} />
-        <StoreBadge store="google" href={PLAY_STORE_URL} />
+        <StoreBadge store="google" href={ANDROID_APK_URL} download="event.apk" />
       </div>
     </div>
   )
