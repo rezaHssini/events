@@ -39,23 +39,25 @@ npm run deploy:apk
 
 | Resource | URL |
 |----------|-----|
-| Web app | `http://5.78.98.154:3040` |
-| Health | `http://5.78.98.154:3040/api/health` |
-| Android APK | `http://5.78.98.154:3040/downloads/event.apk` |
+| Web (port 80) | `http://5.78.98.154/events/` |
+| Web (direct) | `http://5.78.98.154:3040` |
+| Health | `http://5.78.98.154/events/api/health` |
+| Android APK | `http://5.78.98.154/events/downloads/event.apk` |
 
-The **Google Play** badge in the web UI downloads this APK directly.
+Port **3040** is opened in ufw/iptables. If your **cloud firewall** only allows 80/443, use the `/events/` URL on port 80 (nginx proxy — does not affect other sites).
 
-## Environment
+## Server console (no SSH from your Mac)
 
-| Variable | Default |
-|----------|---------|
-| `EVENTS_PORT` | `3040` |
-| `EVENTS_DIR` | `/opt/events` |
-
-## Firewall
-
-If the port is blocked externally:
+Paste on the server as **root**:
 
 ```bash
-ufw allow 3040/tcp
+apt-get update && apt-get install -y git curl
+git clone https://github.com/rezaHssini/events.git /opt/events
+cd /opt/events && bash deploy/server-setup.sh
+```
+
+Open port only (if already deployed):
+
+```bash
+cd /opt/events && bash deploy/open-port.sh
 ```
