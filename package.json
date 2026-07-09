@@ -16,6 +16,7 @@
     "build:mobile": "npm run build:mobile -w @event/web",
     "apk:debug": "npm run apk:debug -w @event/mobile",
     "apk:release": "npm run apk:release -w @event/mobile",
+    "deploy:remote": "bash deploy/remote-deploy.sh",
     "test:e2e": "npm run test:e2e -w @event/web",
     "lint": "npm run lint -w @event/web"
   },
