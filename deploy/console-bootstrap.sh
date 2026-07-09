@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-liner for server console (paste as root on 5.78.98.154):
+# One-liner for server console (paste as root):
 #
 #   curl -fsSL https://raw.githubusercontent.com/rezaHssini/events/main/deploy/console-bootstrap.sh | bash
 #
@@ -21,5 +21,4 @@ fi
 
 cd "${EVENTS_DIR}"
 git pull --ff-only
-bash deploy/fix-nginx.sh
 bash deploy/server-setup.sh
