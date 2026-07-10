@@ -1,20 +1,28 @@
 import { Link } from 'react-router-dom'
 import { WebCard } from './WebLayout'
 import { FollowButton } from '../Social'
-import { suggestedUsers } from '../../data/socialData'
+import { getSuggestedPeople } from '../../data/socialData'
 import { creatorProfilesByHandle } from '../../data/creatorProfiles'
 import { useSocial } from '../../context/SocialContext'
 
 export function FeedDiscoverSidebar() {
   const { followingIds, isFollowing } = useSocial()
-  const people = suggestedUsers.filter((u) => !followingIds.has(u.id)).slice(0, 5)
+  const people = getSuggestedPeople(followingIds, 5)
   const planners = Object.values(creatorProfilesByHandle).slice(0, 3)
 
   return (
     <div className="space-y-4">
       <WebCard title="Suggested people">
         <ul className="space-y-3">
-          {people.map((user) => (
+          {people.length === 0 ? (
+            <li className="py-2 text-center text-sm text-slate-500">
+              No suggestions right now.{' '}
+              <Link to="/find-people" className="text-[#0a84ff] hover:underline">
+                Browse people
+              </Link>
+            </li>
+          ) : (
+            people.map((user) => (
             <li key={user.id} className="flex items-center gap-3">
               <Link to={`/user/${user.handle}`}>
                 <img src={user.avatar} alt="" className="h-10 w-10 rounded-full object-cover" />
@@ -27,7 +35,8 @@ export function FeedDiscoverSidebar() {
               </div>
               <FollowButton userId={user.id} size="sm" />
             </li>
-          ))}
+            ))
+          )}
         </ul>
         <Link to="/find-people" className="mt-3 block text-center text-sm font-medium text-[#0a84ff]">
           See all people →

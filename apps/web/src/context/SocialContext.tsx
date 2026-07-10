@@ -19,7 +19,8 @@ interface SocialContextValue {
 
 const SocialContext = createContext<SocialContextValue | null>(null)
 
-const INITIAL_FOLLOWING = ['1', '2', '3', '4', '5', '7', '8']
+/** Demo seed: a few existing follows — not the entire suggested pool. */
+const INITIAL_FOLLOWING = ['2', '3', '4']
 const SETTINGS_KEY = 'event-user-settings'
 
 function hasCompletedOnboarding(): boolean {

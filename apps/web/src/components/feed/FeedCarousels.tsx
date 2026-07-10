@@ -3,13 +3,13 @@ import { motion } from 'framer-motion'
 import { ChevronRight, Users } from 'lucide-react'
 import { mainTabLinkState } from '../layout/MainBackButton'
 import { FollowButton } from '../Social'
-import { suggestedUsers } from '../../data/socialData'
+import { getSuggestedPeople } from '../../data/socialData'
 import { creatorProfilesByHandle } from '../../data/creatorProfiles'
 import { useSocial } from '../../context/SocialContext'
 
 export function SuggestPeopleCarousel() {
   const { followingIds } = useSocial()
-  const people = suggestedUsers.filter((u) => !followingIds.has(u.id)).slice(0, 8)
+  const people = getSuggestedPeople(followingIds, 8)
 
   if (people.length === 0) return null
 

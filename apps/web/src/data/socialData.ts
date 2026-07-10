@@ -243,6 +243,19 @@ export function getFriendsGoingForEvent(eventId: string): MentionUser[] {
 
 export const suggestedUsers = userProfiles.filter((u) => !u.isCreator && u.id !== 'me')
 
+/** People to suggest who aren't already followed, sorted by mutual friends. */
+export function getSuggestedPeople(followingIds: ReadonlySet<string>, limit = 5): UserProfile[] {
+  const unfollowed = suggestedUsers
+    .filter((u) => !followingIds.has(u.id))
+    .sort((a, b) => b.mutualFriends - a.mutualFriends)
+
+  if (unfollowed.length > 0) return unfollowed.slice(0, limit)
+
+  return suggestedUsers
+    .sort((a, b) => b.mutualFriends - a.mutualFriends)
+    .slice(0, limit)
+}
+
 export interface SocialActivity {
   id: string
   type: 'going' | 'memory' | 'follow' | 'shared_event' | 'liked_event'
