@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Badge, StarRating } from '../components/UI'
@@ -23,16 +23,10 @@ import { type PreorderCart } from '../components/menu/CheckoutMenuAddons'
 import { EventMenuPanel } from '../components/event/EventMenuPanel'
 import { EventCommentsPanel } from '../components/event/EventCommentsPanel'
 import { FriendsGoingPill } from '../components/social/FriendsGoing'
-import { EventDetailSkeleton } from '../components/ui/Skeleton'
-import { useSimulatedQuery } from '../hooks/useSimulatedQuery'
 import { useLoginGate } from '../context/LoginGateContext'
-
-const EventMap = lazy(() =>
-  import('../components/ui/EventMap').then((m) => ({ default: m.EventMap })),
-)
-const ShareEventModal = lazy(() =>
-  import('../components/Social').then((m) => ({ default: m.ShareEventModal })),
-)
+import { EventMap } from '../components/ui/EventMap'
+import { ShareEventModal } from '../components/Social'
+import { AppImage } from '../components/ui/AppImage'
 
 const allTabs = ['About', 'Menu', 'Memories', 'Comments'] as const
 type EventTab = (typeof allTabs)[number]
@@ -76,7 +70,6 @@ export default function EventDetailPage() {
   const [replyTo, setReplyTo] = useState<MentionUser | undefined>()
   const [preorderCart, setPreorderCart] = useState<PreorderCart>({})
   const event = events.find((e) => e.id === routeState?.eventId) ?? mainEvent
-  const { isLoading: eventLoading } = useSimulatedQuery(event, [event.id], { delay: 600 })
   const mediaItems = getEventMedia(event)
   const hasTicket = tickets.some((t) => t.eventId === event.id && t.status === 'upcoming')
   const isPastEvent = event.status === 'past'
@@ -119,6 +112,10 @@ export default function EventDetailPage() {
   })}${!isRecurring(event.recurrence) ? ` – ${event.endTime}` : ''}`
 
   useEffect(() => {
+    setTab(initialTab)
+  }, [event.id])
+
+  useEffect(() => {
     const sentinel = titleSentinelRef.current
     if (!sentinel) return
 
@@ -129,10 +126,6 @@ export default function EventDetailPage() {
     observer.observe(sentinel)
     return () => observer.disconnect()
   }, [event.id])
-
-  if (eventLoading) {
-    return <EventDetailSkeleton />
-  }
 
   return (
     <div className="min-h-screen pb-24">
@@ -325,9 +318,8 @@ export default function EventDetailPage() {
         </div>
 
         <div className="mt-4 text-left">
-          {tab === 'About' && (
-            <>
-              <p className="text-slate-300 leading-relaxed">{event.description}</p>
+          <div hidden={tab !== 'About'}>
+            <p className="text-slate-300 leading-relaxed">{event.description}</p>
               {isRecurring(event.recurrence) && (
                 <div className="mt-4 rounded-[18px] liquid-glass-subtle p-4 text-left">
                   <p className="ios-caption">Recurring schedule</p>
@@ -349,18 +341,12 @@ export default function EventDetailPage() {
                 </div>
               )}
               <div className="mt-4">
-                <Suspense
-                  fallback={
-                    <div className="h-[200px] animate-pulse rounded-[18px] bg-surface-2" />
-                  }
-                >
-                  <EventMap
-                    lat={event.lat}
-                    lng={event.lng}
-                    label={`${event.location} · ${event.address}`}
-                    height={200}
-                  />
-                </Suspense>
+                <EventMap
+                  lat={event.lat}
+                  lng={event.lng}
+                  label={`${event.location} · ${event.address}`}
+                  height={200}
+                />
               </div>
               <h3 className="mt-6 font-semibold lg:hidden">Tickets</h3>
               <div className="lg:hidden">
@@ -386,10 +372,9 @@ export default function EventDetailPage() {
                 </div>
               ))}
               </div>
-            </>
-          )}
+          </div>
 
-          {tab === 'Menu' && (
+          <div hidden={tab !== 'Menu'}>
             <EventMenuPanel
               menu={menu}
               event={event}
@@ -399,14 +384,14 @@ export default function EventDetailPage() {
               onCartChange={setPreorderCart}
               onGetTickets={() => requireLogin(() => navigate('/checkout', { state: { event } }))}
             />
-          )}
+          </div>
 
-          {tab === 'Memories' && isPastEvent && (
+          <div hidden={tab !== 'Memories' || !isPastEvent}>
             <div className="space-y-4">
               {memories.map((m) => (
                 <div key={m.id} className="rounded-xl glass p-4">
                   <div className="flex items-center gap-3">
-                    <img src={m.user.avatar} alt="" className="h-9 w-9 rounded-full" />
+                    <AppImage src={m.user.avatar} alt="" className="h-9 w-9 rounded-full" />
                     <div>
                       <p className="font-medium text-sm">{m.user.name}</p>
                       <p className="text-xs text-success">✓ Verified attendee</p>
@@ -415,14 +400,14 @@ export default function EventDetailPage() {
                   </div>
                   <p className="mt-2 text-sm">{m.body}</p>
                   {m.media[0] && (
-                    <img src={m.media[0]} alt="" className="mt-2 rounded-lg aspect-video w-full object-cover" />
+                    <AppImage src={m.media[0]} alt="" className="mt-2 rounded-lg aspect-video w-full object-cover" />
                   )}
                 </div>
               ))}
             </div>
-          )}
+          </div>
 
-          {tab === 'Comments' && (
+          <div hidden={tab !== 'Comments'}>
             <EventCommentsPanel
               comments={comments}
               isAuthenticated={isAuthenticated}
@@ -452,7 +437,7 @@ export default function EventDetailPage() {
               }}
               onClearReply={() => setReplyTo(undefined)}
             />
-          )}
+          </div>
         </div>
           </div>
 
@@ -540,13 +525,11 @@ export default function EventDetailPage() {
       </div>
 
       {showShare && (
-        <Suspense fallback={null}>
-          <ShareEventModal
+        <ShareEventModal
             event={sharePayload}
             onClose={() => setShowShare(false)}
             onShareToChat={shareToFriend}
           />
-        </Suspense>
       )}
     </div>
   )

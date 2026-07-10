@@ -1,4 +1,5 @@
 import { SpatialPhoto } from '../ui/SpatialPhoto'
+import { AppImage } from '../ui/AppImage'
 
 type FeedImageProps = {
   src: string
@@ -61,7 +62,7 @@ export function AvatarRing({
       <div className={`relative shrink-0 ${sizes[size]}`}>
         <div className={`absolute inset-0 rounded-full ${ring}`}>
           <div className="h-full w-full rounded-full bg-black p-[2px]">
-            <img src={src} alt={name} className="h-full w-full rounded-full object-cover" />
+            <AppImage src={src} alt={name} className="h-full w-full rounded-full object-cover" />
           </div>
         </div>
       </div>

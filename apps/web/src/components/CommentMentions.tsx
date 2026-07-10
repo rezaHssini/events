@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { mentionableUsers, type MentionUser } from '../data/socialData'
 import { useToast } from '../context/ToastContext'
+import { AppImage } from './ui/AppImage'
+import { media } from '../data/media'
 
 /** Render comment/chat text with highlighted @mentions */
 export function MentionText({ text }: { text: string }) {
@@ -99,8 +101,8 @@ export function CommentComposer({
         </div>
       )}
       <div className="flex gap-3">
-        <img
-          src={userAvatar ?? 'https://via.placeholder.com/40'}
+        <AppImage
+          src={userAvatar ?? media.avatarReza}
           alt=""
           className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-white/10"
         />
@@ -130,7 +132,7 @@ export function CommentComposer({
                   onClick={() => insertMention(user)}
                   className="flex w-full items-center gap-3 px-3 py-2.5 text-left hover:bg-white/10"
                 >
-                  <img src={user.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
+                  <AppImage src={user.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
                   <div>
                     <p className="text-sm font-medium">
                       {user.name}
@@ -180,7 +182,7 @@ export function CommentThread({
   return (
     <div className={depth > 0 ? 'ml-6 mt-3 border-l-2 border-white/10 pl-4' : ''}>
       <div className="flex gap-3">
-        <img src={comment.user.avatar} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
+        <AppImage src={comment.user.avatar} alt="" className="h-8 w-8 shrink-0 rounded-full object-cover" />
         <div className="flex-1 min-w-0 text-left">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-sm font-medium">{comment.user.name}</p>

@@ -3,6 +3,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SpaController } from './spa.controller';
 
 @Module({
   imports: [
@@ -23,12 +24,11 @@ import { AppService } from './app.service';
       rootPath: join(__dirname, '..', 'public'),
       exclude: ['/api/{*path}', '/downloads/{*path}'],
       serveStaticOptions: {
-        index: 'index.html',
+        index: false,
       },
-      renderPath: '/{*path}',
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, SpaController],
   providers: [AppService],
 })
 export class AppModule {}

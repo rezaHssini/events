@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { media } from '../../data/media'
 
 const FALLBACK = media.concert
@@ -16,11 +16,17 @@ export function AppImage({
 }) {
   const [resolved, setResolved] = useState(src || fallback)
 
+  useEffect(() => {
+    setResolved(src || fallback)
+  }, [src, fallback])
+
   return (
     <img
       src={resolved}
       alt={alt}
       className={className}
+      loading="lazy"
+      decoding="async"
       onError={() => {
         if (resolved !== fallback) setResolved(fallback)
       }}

@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { media } from '../../data/media'
+
+const FALLBACK = media.concert
 
 type Aspect = 'square' | 'video' | 'portrait' | 'wide'
 
@@ -28,6 +31,12 @@ export function SpatialPhoto({
   enableTilt = true,
 }: SpatialPhotoProps) {
   const [loaded, setLoaded] = useState(false)
+  const [resolvedSrc, setResolvedSrc] = useState(src)
+
+  useEffect(() => {
+    setResolvedSrc(src)
+    setLoaded(false)
+  }, [src])
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
   const sx = useSpring(mx, { stiffness: 180, damping: 22 })
@@ -64,11 +73,17 @@ export function SpatialPhoto({
           <div className="absolute inset-0 animate-pulse bg-white/5" />
         )}
         <motion.img
-          src={src}
+          src={resolvedSrc}
           alt={alt}
           loading="lazy"
           decoding="async"
           onLoad={() => setLoaded(true)}
+          onError={() => {
+            if (resolvedSrc !== FALLBACK) {
+              setResolvedSrc(FALLBACK)
+              setLoaded(false)
+            }
+          }}
           className="absolute inset-0 h-full w-full object-cover will-change-transform"
           style={enableTilt ? { x: imgX, y: imgY, scale: 1.08 } : { scale: 1 }}
         />

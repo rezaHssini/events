@@ -104,7 +104,11 @@ export default function AuthPage() {
     }, 600)
   }, [identifier, login, navigate, prefs.onboardingCompleted, from, loading])
 
-  const current = backgroundMedia[slide]
+  const [bgSrc, setBgSrc] = useState(backgroundMedia[0].src)
+
+  useEffect(() => {
+    setBgSrc(backgroundMedia[slide].src)
+  }, [slide])
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -112,20 +116,21 @@ export default function AuthPage() {
         <AnimatePresence mode="wait">
           <motion.img
             key={slide}
-            src={current.src}
+            src={bgSrc}
             alt=""
             initial={{ opacity: 0, scale: 1.04 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1 }}
             className="h-full w-full object-cover"
+            onError={() => setBgSrc(media.concert)}
           />
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/75" />
       </div>
 
       <div className="absolute bottom-8 left-8 right-8 hidden max-w-lg lg:block">
-        <TypewriterText text={current.tagline} />
+        <TypewriterText text={backgroundMedia[slide].tagline} />
       </div>
 
       <div className="relative flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
@@ -205,7 +210,7 @@ export default function AuthPage() {
             </div>
           </div>
 
-          <p className="mt-4 text-center text-xs text-white/40 lg:hidden">{current.tagline}</p>
+          <p className="mt-4 text-center text-xs text-white/40 lg:hidden">{backgroundMedia[slide].tagline}</p>
         </div>
       </div>
     </div>

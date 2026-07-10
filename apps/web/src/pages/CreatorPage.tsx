@@ -8,8 +8,6 @@ import { AppImage } from '../components/ui/AppImage'
 import { getCreatorProfile } from '../data/creatorProfiles'
 import { plannerManagedEvents } from '../data/plannerData'
 import { memories } from '../data/mockData'
-import { ProfileHeaderSkeleton, EventCardSkeleton } from '../components/ui/Skeleton'
-import { useSimulatedQuery } from '../hooks/useSimulatedQuery'
 
 const tabs = ['Events', 'Posts', 'Reviews', 'About'] as const
 
@@ -21,22 +19,6 @@ export default function CreatorPage() {
   const publicEvents = plannerManagedEvents.filter((e) => e.status !== 'draft')
   const upcomingEvents = publicEvents.filter((e) => e.status !== 'past')
   const pastEvents = publicEvents.filter((e) => e.status === 'past')
-  const { isLoading } = useSimulatedQuery(profile, [handle, tab], { delay: 600 })
-
-  if (isLoading) {
-    return (
-      <div className="pb-10">
-        <div className="web-container pt-8">
-          <ProfileHeaderSkeleton />
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <EventCardSkeleton />
-            <EventCardSkeleton />
-            <EventCardSkeleton />
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="pb-10">

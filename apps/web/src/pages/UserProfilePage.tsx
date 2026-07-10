@@ -20,8 +20,7 @@ import { FollowButton } from '../components/Social'
 import { PostComposer } from '../components/feed/PostComposer'
 import { FeedUserPost } from '../components/feed/FeedPosts'
 import { currentUser, userProfiles, type UserProfile } from '../data/socialData'
-import { ProfileHeaderSkeleton, FeedPostSkeleton } from '../components/ui/Skeleton'
-import { useSimulatedQuery } from '../hooks/useSimulatedQuery'
+import { AppImage } from '../components/ui/AppImage'
 import { WebPageHeader } from '../components/layout/WebLayout'
 
 const profileTabs = [
@@ -45,24 +44,11 @@ function ProfileContent({ profile, isOwn }: { profile: UserProfile; isOwn: boole
   const cover =
     profile.coverUrl ??
     media.crowd
-  const { isLoading } = useSimulatedQuery(profile, [profile.id, tab], { delay: 550 })
-
-  if (isLoading) {
-    return (
-      <div className="web-container py-8">
-        <ProfileHeaderSkeleton />
-        <div className="mt-6 space-y-4">
-          <FeedPostSkeleton />
-          <FeedPostSkeleton />
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="pb-10">
       <div className="relative h-44 overflow-hidden lg:h-56">
-        <img src={cover} alt="" className="h-full w-full object-cover" />
+        <AppImage src={cover} alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-black/30" />
         {isOwn && (
           <Link
@@ -78,7 +64,7 @@ function ProfileContent({ profile, isOwn }: { profile: UserProfile; isOwn: boole
         {/* Avatar + actions */}
         <div className="-mt-14 flex items-end justify-between">
           <div className="relative">
-            <img
+            <AppImage
               src={profile.avatar}
               alt=""
               className="h-[104px] w-[104px] rounded-full border-4 border-[#0a0a0f] object-cover shadow-xl"
@@ -206,7 +192,7 @@ function ProfileContent({ profile, isOwn }: { profile: UserProfile; isOwn: boole
             {profile.upcomingEvents.length > 0 && (
               <div className="mt-5 overflow-hidden rounded-2xl border border-primary/20 bg-primary/5">
                 <div className="flex items-center gap-3 p-3">
-                  <img
+                  <AppImage
                     src={profile.upcomingEvents[0].cover}
                     alt=""
                     className="h-14 w-14 rounded-xl object-cover"
@@ -271,7 +257,7 @@ function ProfileContent({ profile, isOwn }: { profile: UserProfile; isOwn: boole
                       to="/event"
                       className="group relative aspect-square overflow-hidden bg-surface-2"
                     >
-                      <img
+                      <AppImage
                         src={e.cover}
                         alt=""
                         className="h-full w-full object-cover transition-transform group-hover:scale-105"
@@ -294,7 +280,7 @@ function ProfileContent({ profile, isOwn }: { profile: UserProfile; isOwn: boole
                 <div className="grid grid-cols-3 gap-0.5">
                   {profile.recentMemories.map((m, i) => (
                     <div key={i} className="relative aspect-square overflow-hidden bg-surface-2">
-                      <img src={m.image} alt="" className="h-full w-full object-cover" />
+                      <AppImage src={m.image} alt="" className="h-full w-full object-cover" />
                     </div>
                   ))}
                   {profile.recentMemories.length === 0 && (
@@ -366,7 +352,7 @@ export default function UserProfilePage() {
               to={`/user/${u.handle}`}
               className="flex items-center gap-3 px-4 py-3 hover:bg-white/5"
             >
-              <img src={u.avatar} alt="" className="h-11 w-11 rounded-full object-cover" />
+              <AppImage src={u.avatar} alt="" className="h-11 w-11 rounded-full object-cover" />
               <div className="flex-1 text-left">
                 <p className="font-medium">{u.name}</p>
                 <p className="text-sm text-slate-400">@{u.handle}</p>

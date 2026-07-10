@@ -1,15 +1,8 @@
-import { Suspense, lazy } from 'react'
 import { Link } from 'react-router-dom'
 import { currentUser } from '../../data/socialData'
 import type { Comment, MentionUser } from '../../data/socialData'
 import { AuthGateBanner } from '../auth/AuthGateBanner'
-
-const CommentComposer = lazy(() =>
-  import('../CommentMentions').then((m) => ({ default: m.CommentComposer })),
-)
-const CommentThread = lazy(() =>
-  import('../CommentMentions').then((m) => ({ default: m.CommentThread })),
-)
+import { CommentComposer, CommentThread } from '../CommentMentions'
 
 export function EventCommentsPanel({
   comments,
@@ -48,14 +41,12 @@ export function EventCommentsPanel({
       </div>
 
       {isAuthenticated ? (
-        <Suspense fallback={<div className="h-24 animate-pulse rounded-xl bg-surface-2" />}>
-          <CommentComposer
-            replyTo={replyTo}
-            onSubmit={onSubmit}
-            userAvatar={currentUser.avatar}
-            onCancelReply={replyTo ? onClearReply : undefined}
-          />
-        </Suspense>
+        <CommentComposer
+          replyTo={replyTo}
+          onSubmit={onSubmit}
+          userAvatar={currentUser.avatar}
+          onCancelReply={replyTo ? onClearReply : undefined}
+        />
       ) : (
         <>
           <AuthGateBanner variant="sign-in" />
@@ -73,35 +64,26 @@ export function EventCommentsPanel({
         </>
       )}
 
-      <Suspense
-        fallback={
-          <div className="space-y-4">
-            <div className="h-20 animate-pulse rounded-xl bg-surface-2" />
-            <div className="h-20 animate-pulse rounded-xl bg-surface-2" />
-          </div>
-        }
-      >
-        <div className="space-y-3">
-          {comments.length === 0 ? (
-            <p className="rounded-xl border border-white/10 bg-white/[0.02] py-10 text-center text-sm text-[rgba(235,235,245,0.45)]">
-              No comments yet. {isAuthenticated ? 'Be the first to ask a question!' : 'Sign in to start the thread.'}
-            </p>
-          ) : (
-            comments.map((c) => (
-              <div
-                key={c.id}
-                className="rounded-xl border border-white/10 bg-white/[0.02] p-4"
-              >
-                <CommentThread
-                  comment={c}
-                  onReply={isAuthenticated ? onReply : () => {}}
-                  isAuthenticated={isAuthenticated}
-                />
-              </div>
-            ))
-          )}
-        </div>
-      </Suspense>
+      <div className="space-y-3">
+        {comments.length === 0 ? (
+          <p className="rounded-xl border border-white/10 bg-white/[0.02] py-10 text-center text-sm text-[rgba(235,235,245,0.45)]">
+            No comments yet. {isAuthenticated ? 'Be the first to ask a question!' : 'Sign in to start the thread.'}
+          </p>
+        ) : (
+          comments.map((c) => (
+            <div
+              key={c.id}
+              className="rounded-xl border border-white/10 bg-white/[0.02] p-4"
+            >
+              <CommentThread
+                comment={c}
+                onReply={isAuthenticated ? onReply : () => {}}
+                isAuthenticated={isAuthenticated}
+              />
+            </div>
+          ))
+        )}
+      </div>
     </div>
   )
 }
