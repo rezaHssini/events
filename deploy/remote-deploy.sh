@@ -35,4 +35,9 @@ echo "==> Installing on server..."
 scp "${SCRIPT_DIR}/server-install.sh" "${SCRIPT_DIR}/open-port.sh" "${HOST}:/tmp/"
 ssh "${HOST}" "bash /tmp/server-install.sh && rm -f /tmp/server-install.sh /tmp/open-port.sh"
 
+if [ -f "${ROOT}/apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk" ]; then
+  echo "==> Uploading APK..."
+  bash "${SCRIPT_DIR}/upload-apk.sh" "${HOST}"
+fi
+
 echo "==> Deploy complete."

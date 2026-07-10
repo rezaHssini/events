@@ -7,20 +7,18 @@ const ANDROID_APK_URL = import.meta.env.VITE_ANDROID_APK_URL ?? '/downloads/even
 function StoreBadge({
   store,
   href,
-  download,
 }: {
   store: 'apple' | 'google'
   href: string
-  download?: string
 }) {
-  const label = store === 'apple' ? 'Download on the App Store' : 'Get it on Google Play'
+  const label = store === 'apple' ? 'Download on the App Store' : 'Download Android app (APK)'
+  const isApk = store === 'google'
   return (
     <a
       href={href}
-      download={download}
-      target={download ? undefined : '_blank'}
-      rel={download ? undefined : 'noopener noreferrer'}
-      aria-label={download ? 'Download Android app (APK)' : label}
+      target={isApk ? '_self' : '_blank'}
+      rel={isApk ? undefined : 'noopener noreferrer'}
+      aria-label={label}
       className="inline-flex min-w-[140px] flex-1 items-center gap-2.5 rounded-xl border border-white/15 bg-black/40 px-3.5 py-2.5 transition-colors hover:border-white/25 hover:bg-black/55 sm:flex-none"
     >
       <span className="text-xl leading-none">{store === 'apple' ? '' : '▶'}</span>
@@ -29,6 +27,11 @@ function StoreBadge({
           {store === 'apple' ? 'Download on the' : 'Get it on'}
         </span>
         <span className="block text-sm font-semibold">{store === 'apple' ? 'App Store' : 'Google Play'}</span>
+        {isApk && (
+          <span className="mt-0.5 block text-[9px] text-[rgba(235,235,245,0.4)]">
+            Direct APK · browser may ask to confirm
+          </span>
+        )}
       </span>
     </a>
   )
@@ -47,7 +50,7 @@ export function MobileAppPromo({
         <p className="text-sm text-[rgba(235,235,245,0.55)]">Also on mobile</p>
         <div className="flex flex-wrap gap-2">
           <StoreBadge store="apple" href={APP_STORE_URL} />
-          <StoreBadge store="google" href={ANDROID_APK_URL} download="event.apk" />
+          <StoreBadge store="google" href={ANDROID_APK_URL} />
         </div>
       </div>
     )
@@ -72,7 +75,7 @@ export function MobileAppPromo({
           </div>
           <div className="flex flex-wrap gap-2 sm:shrink-0">
             <StoreBadge store="apple" href={APP_STORE_URL} />
-            <StoreBadge store="google" href={ANDROID_APK_URL} download="event.apk" />
+            <StoreBadge store="google" href={ANDROID_APK_URL} />
           </div>
         </div>
       </div>
@@ -90,7 +93,7 @@ export function MobileAppPromo({
       </p>
       <div className="mt-3 flex flex-col gap-2">
         <StoreBadge store="apple" href={APP_STORE_URL} />
-        <StoreBadge store="google" href={ANDROID_APK_URL} download="event.apk" />
+        <StoreBadge store="google" href={ANDROID_APK_URL} />
       </div>
     </div>
   )
