@@ -1,7 +1,7 @@
 {
   "appId": "com.event.app",
   "appName": "Event",
-  "webDir": "../web/dist",
+  "webDir": "../mobile-ui/dist",
   "android": {
     "minWebViewVersion": 49,
     "allowMixedContent": true

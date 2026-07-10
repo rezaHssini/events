@@ -8,7 +8,8 @@ Monorepo containing the **web client**, **Android app**, and **API server**.
 
 | Path | Package | Description |
 |------|---------|-------------|
-| [`apps/web/`](apps/web/) | `@event/web` | React + Vite web client |
+| [`apps/web/`](apps/web/) | `@event/web` | React + Vite **desktop web** client |
+| [`apps/mobile-ui/`](apps/mobile-ui/) | `@event/mobile-ui` | **Mobile-first** UI (bottom tabs) |
 | [`apps/mobile/`](apps/mobile/) | `@event/mobile` | Capacitor Android shell |
 | [`apps/api/`](apps/api/) | `@event/api` | NestJS API + static hosting |
 | [`docs/`](docs/) | — | Product & architecture docs |
@@ -40,6 +41,8 @@ npm run start:prod -w @event/api
 
 ## Android APK
 
+Builds the **mobile UI** (`apps/mobile-ui`), not the desktop web app:
+
 ```bash
 npm run apk:debug      # installable debug APK
 npm run apk:release    # unsigned release APK
@@ -53,8 +56,9 @@ Requires Java 21 and Android SDK. See [`apps/mobile/README.md`](apps/mobile/READ
 
 | Layer | Technology |
 |-------|------------|
-| Web | React 19, Vite, Tailwind CSS, Framer Motion |
-| Mobile | Capacitor 8 (Android 7.0+) |
+| Web (desktop) | React 19, Vite, Tailwind CSS, Framer Motion |
+| Mobile UI | React 19, mobile-first layout (`apps/mobile-ui`) |
+| Mobile shell | Capacitor 8 (Android 7.0+) |
 | API | NestJS 11 |
 | E2E | Playwright |
 
@@ -64,4 +68,4 @@ Planning docs live in [`docs/`](docs/) — vision, features, architecture, roadm
 
 ## Legacy
 
-The old `mock-web/` prototype has been superseded by `apps/web/` and is excluded from version control.
+The local `mock-web/` folder was merged into `apps/mobile-ui/`. Use `apps/web/` for desktop and `apps/mobile-ui/` for the Android app.

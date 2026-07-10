@@ -1,0 +1,312 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface: #1c1c1e;
+  --color-surface-2: #2c2c2e;
+  --color-surface-3: #3a3a3c;
+  --color-primary: #0a84ff;
+  --color-primary-light: #64b5ff;
+  --color-secondary: #64d2ff;
+  --color-accent: #bf5af2;
+  --color-success: #30d158;
+  --color-warning: #ffd60a;
+  --color-danger: #ff453a;
+  --color-label: #ffffff;
+  --color-label-secondary: rgba(235, 235, 245, 0.6);
+  --color-label-tertiary: rgba(235, 235, 245, 0.3);
+  --color-separator: rgba(84, 84, 88, 0.65);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  --font-rounded: -apple-system, BlinkMacSystemFont, "SF Pro Rounded", system-ui, sans-serif;
+  --radius-ios: 22px;
+  --radius-ios-lg: 28px;
+  --radius-ios-pill: 999px;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply m-0 font-sans antialiased;
+    color: var(--color-label);
+    background: #000;
+    min-height: 100dvh;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+}
+
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.2s;
+  }
+}
+
+@layer utilities {
+  /* ── iOS 26 Liquid Glass ── */
+  .liquid-glass {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.04) 40%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 0.5px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 0 0 0.5px rgba(255, 255, 255, 0.05) inset,
+      0 1px 0 rgba(255, 255, 255, 0.12) inset,
+      0 8px 32px rgba(0, 0, 0, 0.35),
+      0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .liquid-glass-subtle {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.04) inset;
+  }
+
+  .liquid-glass-prominent {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    backdrop-filter: blur(60px) saturate(200%);
+    -webkit-backdrop-filter: blur(60px) saturate(200%);
+    border: 0.5px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.2) inset,
+      0 12px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Legacy aliases → liquid glass */
+  .glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-ios);
+    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.04) inset;
+  }
+
+  .feed-card {
+    overflow: hidden;
+    border-radius: var(--radius-ios-lg);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.04) 40%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 0.5px solid rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 0 0 0.5px rgba(255, 255, 255, 0.05) inset,
+      0 1px 0 rgba(255, 255, 255, 0.12) inset,
+      0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  .game-card {
+    border-radius: var(--radius-ios-lg);
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* ── Floating tab bar chrome ── */
+  .floating-tab-bar {
+    border-radius: var(--radius-ios-pill);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.02) 28%,
+      rgba(0, 0, 0, 0) 28%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(36, 36, 40, 0.82) 0%,
+      rgba(22, 22, 26, 0.9) 100%
+    );
+    backdrop-filter: blur(60px) saturate(180%);
+    -webkit-backdrop-filter: blur(60px) saturate(180%);
+    border: 0.5px solid rgba(255, 255, 255, 0.14);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.1) inset,
+      0 16px 48px rgba(0, 0, 0, 0.62),
+      0 4px 16px rgba(0, 0, 0, 0.38);
+  }
+
+  /* ── Spatial photos ── */
+  .spatial-photo-wrap {
+    perspective: 1200px;
+    transform-style: preserve-3d;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .spatial-photo {
+    transform-style: preserve-3d;
+    border-radius: var(--radius-ios-lg);
+    overflow: hidden;
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.3),
+      0 12px 40px rgba(0, 0, 0, 0.45),
+      0 0 0 0.5px rgba(255, 255, 255, 0.08) inset;
+  }
+
+  .spatial-photo.rounded-none {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .spatial-photo-shine {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      transparent 42%,
+      transparent 58%,
+      rgba(255, 255, 255, 0.06) 100%
+    );
+    mix-blend-mode: overlay;
+  }
+
+  .spatial-photo-edge {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+      0 0 0 0.5px rgba(255, 255, 255, 0.15) inset,
+      0 -20px 40px rgba(0, 0, 0, 0.15) inset;
+  }
+
+  /* ── iOS mesh wallpaper ── */
+  .ios-mesh-bg {
+    background-color: #000;
+    background-image:
+      radial-gradient(ellipse 90% 60% at 10% 0%, rgba(10, 132, 255, 0.18), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 95% 15%, rgba(191, 90, 242, 0.12), transparent 50%),
+      radial-gradient(ellipse 60% 45% at 50% 100%, rgba(100, 210, 255, 0.08), transparent 55%),
+      radial-gradient(ellipse 40% 30% at 80% 70%, rgba(48, 209, 88, 0.05), transparent 45%);
+  }
+
+  /* ── Typography ── */
+  .ios-large-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 0.37px;
+    line-height: 41px;
+  }
+
+  .ios-title-2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.35px;
+    line-height: 28px;
+  }
+
+  .ios-headline {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
+    line-height: 22px;
+  }
+
+  .ios-subhead {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.24px;
+    line-height: 20px;
+    color: var(--color-label-secondary);
+  }
+
+  .ios-caption {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 16px;
+    color: var(--color-label-tertiary);
+  }
+
+  .gradient-hero {
+    background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 50%, #bf5af2 100%);
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #64b5ff, #bf5af2);
+  }
+
+  .ios-pill {
+    @apply rounded-[var(--radius-ios-pill)];
+  }
+
+  .ios-button {
+    border-radius: 14px;
+    font-weight: 600;
+    transition: transform 0.15s ease;
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .ios-button:active {
+    transform: scale(0.97);
+  }
+
+  .ios-button-glass {
+    border-radius: 14px;
+    font-weight: 600;
+    transition: transform 0.15s ease;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-label);
+  }
+  .ios-button-glass:active {
+    transform: scale(0.97);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out active:scale-[0.98];
+  }
+
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .feed-stories {
+    mask-image: linear-gradient(to right, black 92%, transparent 100%);
+  }
+
+  .ios-separator {
+    height: 0.5px;
+    background: var(--color-separator);
+  }
+}

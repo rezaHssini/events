@@ -2,7 +2,8 @@
 
 Android app shell for the Event platform, built with [Capacitor](https://capacitorjs.com/).
 
-The UI is the same React app as `@event/web`, bundled with legacy WebView polyfills for older devices.
+The UI comes from **`@event/mobile-ui`** — the original mobile-first app with bottom tabs and phone layout.  
+The desktop website is **`@event/web`** (separate codebase).
 
 ## Requirements
 

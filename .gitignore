@@ -12,6 +12,7 @@ apps/api/public/
 
 # Mobile
 apps/web/dist/
+apps/mobile-ui/dist/
 apps/mobile/android/.gradle/
 apps/mobile/android/local.properties
 apps/mobile/android/app/build/
