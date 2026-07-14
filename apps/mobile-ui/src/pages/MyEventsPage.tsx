@@ -1,16 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Bookmark, ChevronLeft, ChevronRight, MapPin, Clock } from 'lucide-react'
 import { Badge } from '../components/UI'
-import { ListRowSkeleton } from '../components/ui/Skeleton'
-import { useSimulatedQuery } from '../hooks/useSimulatedQuery'
 import { perks, menuOrders, type Event } from '../data/mockData'
 import { useTickets, type PurchasedTicket } from '../context/TicketsContext'
 import { useSavedEvents } from '../context/SavedEventsContext'
 import { PostComposer } from '../components/feed/PostComposer'
 
-const tabs = ['Upcoming', 'Past', 'Saved'] as const
+const tabs = ['Going', 'Past', 'Saved'] as const
 type Tab = (typeof tabs)[number]
 
 function EventListItem({
@@ -254,24 +252,15 @@ function EventDetail({
 export default function MyEventsPage() {
   const { tickets } = useTickets()
   const { getSavedEvents, unsave } = useSavedEvents()
-  const [tab, setTab] = useState<Tab>('Upcoming')
+  const [tab, setTab] = useState<Tab>('Going')
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const savedEvents = getSavedEvents()
-  const ticketList =
-    tab === 'Upcoming'
-      ? tickets.filter((e) => e.status === 'upcoming')
-      : tab === 'Past'
-        ? tickets.filter((e) => e.status === 'past')
-        : []
   const selected = tickets.find((e) => e.id === selectedId)
-  const listKey =
-    tab === 'Saved' ? `saved-${savedEvents.length}` : `${tab}-${ticketList.length}`
-  const { isLoading: listLoading } = useSimulatedQuery(true, [listKey], { delay: 500 })
 
   const tabCount = (t: Tab) => {
     if (t === 'Saved') return savedEvents.length
-    return tickets.filter((e) => (t === 'Upcoming' ? e.status === 'upcoming' : e.status === 'past')).length
+    return tickets.filter((e) => (t === 'Going' ? e.status === 'upcoming' : e.status === 'past')).length
   }
 
   if (selected) {
@@ -282,7 +271,7 @@ export default function MyEventsPage() {
     <div className="min-h-screen">
       <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0a0a0f]/90 px-4 py-4 backdrop-blur-xl">
         <h1 className="text-xl font-bold gradient-text">My Events</h1>
-        <p className="text-xs text-slate-400">Your tickets, past events & saved</p>
+        <p className="text-xs text-slate-400">Going, past & saved — yours only</p>
         <div className="mt-3 flex gap-1 rounded-xl glass p-1">
           {tabs.map((t) => (
             <button
@@ -301,68 +290,81 @@ export default function MyEventsPage() {
       </header>
 
       <div className="p-4">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-          >
-            {listLoading ? (
-              <ListRowSkeleton count={4} />
-            ) : tab === 'Saved' ? (
-              savedEvents.length > 0 ? (
-                savedEvents.map((event) => (
-                  <SavedEventListItem
-                    key={event.id}
-                    event={event}
-                    onUnsave={() => unsave(event.id)}
-                  />
-                ))
-              ) : (
-                <div className="rounded-2xl glass p-8 text-center">
-                  <p className="text-4xl">🔖</p>
-                  <p className="mt-3 font-semibold">No saved events</p>
-                  <p className="mt-1 text-sm text-slate-400">
-                    Bookmark events from your feed or event pages to find them here
-                  </p>
-                  <Link
-                    to="/explorer"
-                    className="mt-4 inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold"
-                  >
-                    Explore events
-                  </Link>
-                </div>
-              )
-            ) : ticketList.length > 0 ? (
-              ticketList.map((entry) => (
+        <div hidden={tab !== 'Saved'}>
+          {savedEvents.length > 0 ? (
+            savedEvents.map((event) => (
+              <SavedEventListItem
+                key={event.id}
+                event={event}
+                onUnsave={() => unsave(event.id)}
+              />
+            ))
+          ) : (
+            <div className="rounded-2xl glass p-8 text-center">
+              <p className="text-4xl">🔖</p>
+              <p className="mt-3 font-semibold">No saved events</p>
+              <p className="mt-1 text-sm text-slate-400">
+                Bookmark events from your feed or event pages to find them here
+              </p>
+              <Link
+                to="/explorer"
+                className="mt-4 inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold"
+              >
+                Discover events
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <div hidden={tab !== 'Going'}>
+          {tickets.filter((e) => e.status === 'upcoming').length > 0 ? (
+            tickets
+              .filter((e) => e.status === 'upcoming')
+              .map((entry) => (
                 <EventListItem
                   key={entry.id}
                   entry={entry}
                   onSelect={() => setSelectedId(entry.id)}
                 />
               ))
-            ) : (
-              <div className="rounded-2xl glass p-8 text-center">
-                <p className="text-4xl">{tab === 'Upcoming' ? '🎫' : '📸'}</p>
-                <p className="mt-3 font-semibold">No {tab.toLowerCase()} events</p>
-                <p className="mt-1 text-sm text-slate-400">
-                  {tab === 'Upcoming'
-                    ? 'Events you buy tickets for will show up here'
-                    : 'Past events you attended will appear here'}
-                </p>
-                {tab === 'Upcoming' && (
-                  <Link
-                    to="/explorer"
-                    className="mt-4 inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold"
-                  >
-                    Explore events
-                  </Link>
-                )}
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
+          ) : (
+            <div className="rounded-2xl glass p-8 text-center">
+              <p className="text-4xl">🎫</p>
+              <p className="mt-3 font-semibold">Nothing you&apos;re going to yet</p>
+              <p className="mt-1 text-sm text-slate-400">
+                Tickets you buy will show up here
+              </p>
+              <Link
+                to="/explorer"
+                className="mt-4 inline-block rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold"
+              >
+                Discover events
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <div hidden={tab !== 'Past'}>
+          {tickets.filter((e) => e.status === 'past').length > 0 ? (
+            tickets
+              .filter((e) => e.status === 'past')
+              .map((entry) => (
+                <EventListItem
+                  key={entry.id}
+                  entry={entry}
+                  onSelect={() => setSelectedId(entry.id)}
+                />
+              ))
+          ) : (
+            <div className="rounded-2xl glass p-8 text-center">
+              <p className="text-4xl">📸</p>
+              <p className="mt-3 font-semibold">No past events</p>
+              <p className="mt-1 text-sm text-slate-400">
+                Past events you attended will appear here
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

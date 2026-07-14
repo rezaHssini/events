@@ -13,8 +13,11 @@ import { AppService } from './app.service';
         index: false,
         setHeaders: (res, filePath) => {
           if (filePath.endsWith('.apk')) {
+            const name = filePath.endsWith('planner.apk') ? 'planner.apk' : 'event.apk';
             res.setHeader('Content-Type', 'application/vnd.android.package-archive');
-            res.setHeader('Content-Disposition', 'attachment; filename="event.apk"');
+            res.setHeader('Content-Disposition', `attachment; filename="${name}"`);
+            res.setHeader('X-Content-Type-Options', 'nosniff');
+            res.setHeader('Cache-Control', 'public, max-age=300');
           }
         },
       },

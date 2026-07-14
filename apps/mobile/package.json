@@ -6,8 +6,9 @@
   "scripts": {
     "sync": "npm run build -w @event/mobile-ui && npx cap sync android",
     "open": "npx cap open android",
+    "keystore": "bash ../../deploy/ensure-android-keystore.sh",
     "apk:debug": "npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleDebug",
-    "apk:release": "npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleRelease"
+    "apk:release": "npm run keystore && npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleRelease"
   },
   "dependencies": {
     "@capacitor/android": "^8.4.1",

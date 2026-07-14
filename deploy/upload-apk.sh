@@ -14,14 +14,12 @@ fi
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 REMOTE_DIR="${REMOTE_DIR:-/opt/events}"
-APK_SRC="${ROOT}/apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk"
+APK_SRC="${ROOT}/apps/mobile/android/app/build/outputs/apk/release/app-release.apk"
 
 cd "${ROOT}"
 
-if [ ! -f "${APK_SRC}" ]; then
-  echo "==> Building debug APK..."
-  npm run apk:debug
-fi
+echo "==> Building signed release APK..."
+npm run apk:release
 
 echo "==> Uploading APK ($(du -h "${APK_SRC}" | awk '{print $1}'))..."
 ssh "${HOST}" "mkdir -p ${REMOTE_DIR}/apps/api/data"

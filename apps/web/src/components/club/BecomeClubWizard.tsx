@@ -8,6 +8,7 @@ import { ImagePickerSheet } from '../ui/StoryComposer'
 import { FormChip, FormField, FormInput, FormTextarea } from '../ui/FormPrimitives'
 import { media } from '../../data/media'
 import { categories } from '../../data/mockData'
+import { MobileAppPromo } from '../layout/MobileAppPromo'
 
 const STEPS = ['Brand', 'Visuals', 'Details'] as const
 
@@ -52,6 +53,8 @@ export function BecomeClubWizard() {
       />
 
       <div className="web-container max-w-3xl">
+      <MobileAppPromo variant="banner" product="planner" className="mb-6" />
+
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center lg:hidden">
         <motion.div
           animate={{ rotate: [0, 5, -5, 0] }}

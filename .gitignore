@@ -13,12 +13,19 @@ apps/api/public/
 # Mobile
 apps/web/dist/
 apps/mobile-ui/dist/
+apps/planner-ui/dist/
 apps/mobile/android/.gradle/
 apps/mobile/android/local.properties
 apps/mobile/android/app/build/
 apps/mobile/android/build/
 apps/mobile/android/capacitor-cordova-android-plugins/
 apps/mobile/releases/
+apps/planner-mobile/android/.gradle/
+apps/planner-mobile/android/local.properties
+apps/planner-mobile/android/app/build/
+apps/planner-mobile/android/build/
+apps/planner-mobile/android/capacitor-cordova-android-plugins/
+apps/planner-mobile/releases/
 
 # Env & secrets
 .env

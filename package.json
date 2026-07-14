@@ -16,8 +16,11 @@
     "build:mobile": "npm run build:mobile -w @event/web",
     "apk:debug": "npm run apk:debug -w @event/mobile",
     "apk:release": "npm run apk:release -w @event/mobile",
+    "apk:planner:debug": "npm run apk:debug -w @event/planner-mobile",
+    "apk:planner:release": "npm run apk:release -w @event/planner-mobile",
     "deploy:remote": "bash deploy/remote-deploy.sh",
     "deploy:apk": "bash deploy/upload-apk.sh",
+    "deploy:planner-apk": "bash deploy/upload-planner-apk.sh",
     "test:e2e": "npm run test:e2e -w @event/web",
     "lint": "npm run lint -w @event/web"
   },

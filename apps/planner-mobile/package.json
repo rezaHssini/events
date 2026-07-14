@@ -1,0 +1,22 @@
+{
+  "name": "@event/planner-mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Planner Studio Android app (Capacitor) — wraps @event/planner-ui",
+  "scripts": {
+    "sync": "npm run build -w @event/planner-ui && npx cap sync android",
+    "open": "npx cap open android",
+    "keystore": "ANDROID_DIR=\"$(pwd)/android\" bash ../../deploy/ensure-android-keystore.sh",
+    "apk:debug": "npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleDebug",
+    "apk:release": "npm run keystore && npm run sync && cd android && JAVA_HOME=${JAVA_HOME:-/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home} ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.4.1",
+    "@capacitor/core": "^8.4.1",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.4.1"
+  }
+}

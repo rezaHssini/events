@@ -19,6 +19,7 @@ import { WebPageHeader } from '../components/layout/WebLayout'
 import { BecomeClubWizard } from '../components/club/BecomeClubWizard'
 import { PostComposer } from '../components/feed/PostComposer'
 import { AppImage } from '../components/ui/AppImage'
+import { MobileAppPromo } from '../components/layout/MobileAppPromo'
 
 const hubSections = [
   {
@@ -94,6 +95,8 @@ export default function PlannerPage() {
       />
 
       <div className="web-container space-y-6">
+      <MobileAppPromo variant="banner" product="planner" />
+
       <header className="rounded-2xl border border-white/10 bg-gradient-to-br from-warning/10 to-primary/10 px-5 py-5 lg:hidden">
         <div className="flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl gradient-hero shadow-lg">

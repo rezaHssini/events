@@ -1,0 +1,12 @@
+{
+  "appId": "com.event.planner",
+  "appName": "Planner Studio",
+  "webDir": "../planner-ui/dist",
+  "android": {
+    "minWebViewVersion": 49,
+    "allowMixedContent": true
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

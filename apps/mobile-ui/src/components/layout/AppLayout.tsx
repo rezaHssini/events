@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { BottomTabBar } from './BottomTabBar'
 
-const TAB_ROUTES = ['/feed', '/explorer', '/my-events', '/planner']
+const TAB_ROUTES = ['/feed', '/explorer', '/my-events', '/profile']
 
 export function AppLayout() {
   const location = useLocation()
