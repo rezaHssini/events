@@ -559,3 +559,126 @@ export const conversations: Conversation[] = [
     ],
   },
 ]
+
+export interface GroupConversation {
+  id: string
+  name: string
+  description: string
+  avatar: string
+  members: MentionUser[]
+  createdBy: string
+  admins: string[]
+  lastMessage: string
+  lastTime: string
+  unread: number
+  pinned?: boolean
+  muted?: boolean
+  eventContext?: string
+  messages: ChatMessage[]
+}
+
+export const groupInviteFriends: MentionUser[] = userProfiles
+  .filter((u) => !u.isCreator && u.id !== 'me')
+  .slice(0, 10)
+  .map(({ id, name, handle, avatar, isCreator }) => ({ id, name, handle, avatar, isCreator }))
+
+export const groupConversations: GroupConversation[] = [
+  {
+    id: 'group-neon-crew',
+    name: 'Neon Night Crew',
+    description: 'Carpool, fits & pre-game for Saturday. Tag who you mention.',
+    avatar: media.concert,
+    members: [
+      { id: 'me', name: 'You', handle: 'you', avatar: media.avatarReza },
+      mentionableUsers[1],
+      mentionableUsers[2],
+      mentionableUsers[0],
+    ].filter(Boolean) as MentionUser[],
+    createdBy: 'me',
+    admins: ['me'],
+    lastMessage: '@you Meet at Art’s Parking at 8:30?',
+    lastTime: '20m ago',
+    unread: 2,
+    eventContext: 'Neon Nights: Summer Solstice',
+    pinned: true,
+    messages: [
+      {
+        id: 'gm1',
+        senderId: 'system',
+        type: 'text',
+        text: 'You created Neon Night Crew',
+        time: 'Yesterday',
+        read: true,
+      },
+      {
+        id: 'gm2',
+        senderId: '2',
+        type: 'text',
+        text: 'Who’s grabbing a table in the lounge?',
+        time: 'Yesterday 8:10 PM',
+        read: true,
+      },
+      {
+        id: 'gm3',
+        senderId: 'me',
+        type: 'text',
+        text: '@alexm I can hold 6 if we arrive early',
+        time: 'Yesterday 8:15 PM',
+        read: true,
+        mentions: ['alexm'],
+      },
+      {
+        id: 'gm4',
+        senderId: '3',
+        type: 'text',
+        text: '@everyone Meet at Art’s Parking at 8:30?',
+        time: '20m ago',
+        read: false,
+        mentions: ['everyone'],
+      },
+    ],
+  },
+  {
+    id: 'group-jazz-wine',
+    name: 'Rooftop Jazz plan',
+    description: 'Soft playlist picks + wine recommendations.',
+    avatar: media.jazz,
+    members: [
+      { id: 'me', name: 'You', handle: 'you', avatar: media.avatarReza },
+      mentionableUsers[1],
+      mentionableUsers.find((u) => u.handle === 'sarahk') ?? mentionableUsers[2],
+    ].filter(Boolean) as MentionUser[],
+    createdBy: '2',
+    admins: ['2', 'me'],
+    lastMessage: 'Bring a light jacket — windy up there',
+    lastTime: '1d ago',
+    unread: 0,
+    eventContext: 'Rooftop Jazz & Wine',
+    messages: [
+      {
+        id: 'gm1',
+        senderId: '2',
+        type: 'text',
+        text: 'Added you to the rooftop group 🎷',
+        time: '2d ago',
+        read: true,
+      },
+      {
+        id: 'gm2',
+        senderId: 'me',
+        type: 'text',
+        text: 'Excited! Any dress code?',
+        time: '2d ago',
+        read: true,
+      },
+      {
+        id: 'gm3',
+        senderId: '2',
+        type: 'text',
+        text: 'Bring a light jacket — windy up there',
+        time: '1d ago',
+        read: true,
+      },
+    ],
+  },
+]
